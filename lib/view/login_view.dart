@@ -1,5 +1,10 @@
+import 'dart:convert';
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:ultimate_solitions_task/view/home_view.dart';
+import 'package:http/http.dart' as http;
 
 class LoginView extends StatefulWidget {
   const LoginView({super.key});
@@ -11,6 +16,7 @@ class LoginView extends StatefulWidget {
 class _LoginViewState extends State<LoginView> {
   TextEditingController userIdController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
+  String? ResNameSurname;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -116,6 +122,7 @@ class _LoginViewState extends State<LoginView> {
                       padding:
                           const EdgeInsets.only(right: 16, left: 17, top: 8),
                       child: TextField(
+                        obscureText: true,
                         textAlign: TextAlign.center,
                         controller: passwordController,
                         decoration: InputDecoration(
@@ -141,8 +148,18 @@ class _LoginViewState extends State<LoginView> {
                       padding:
                           const EdgeInsets.only(top: 44, right: 17, left: 16),
                       child: ElevatedButton(
-                        onPressed: () {},
-                        child: Text("Log in"),
+                        onPressed: () {
+                          login();
+                        },
+                        child: Text(
+                          "Log in",
+                          style: GoogleFonts.montserrat(
+                            textStyle: TextStyle(
+                              color: Color(0xFFFFFFFF),
+                              fontSize: 14,
+                            ),
+                          ),
+                        ),
                         style: ElevatedButton.styleFrom(
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(22),
@@ -168,5 +185,47 @@ class _LoginViewState extends State<LoginView> {
             ),
           ],
         ));
+  }
+
+  Future<void> login() async {
+    var bodyy = jsonEncode({
+      "Value": {
+        "P_LANG_NO": "2",
+        "P_DLVRY_NO": userIdController.text,
+        "P_PSSWRD": passwordController.text
+      }
+    });
+    if (userIdController.text.isNotEmpty &&
+        passwordController.text.isNotEmpty) {
+      var response = await http.post(
+          Uri.parse(
+              "http://mapp.yemensoft.net/OnyxDeliveryService/Service.svc/CheckDeliveryLogin"),
+          headers: {"Content-Type": "application/json"},
+          body: bodyy);
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+
+        var errMsg = (data as Map)['Result']['ErrMsg'];
+        if (errMsg == "Successful") {
+          ResNameSurname = (data as Map)['Data']['DeliveryName'];
+
+          Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => HomeView(
+                        NameSurname: ResNameSurname.toString(),
+                      )));
+        } else {
+          ScaffoldMessenger.of(context)
+              .showSnackBar(SnackBar(content: Text(errMsg)));
+        }
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(response.statusCode.toString())));
+      }
+    } else {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text("Not allowed")));
+    }
   }
 }
