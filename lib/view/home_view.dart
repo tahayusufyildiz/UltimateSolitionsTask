@@ -12,15 +12,18 @@ class HomeView extends StatefulWidget {
   State<HomeView> createState() => _HomeViewState();
 }
 
-class _HomeViewState extends State<HomeView> {
+class _HomeViewState extends State<HomeView> with TickerProviderStateMixin {
   DeliveryService _service = DeliveryService();
   bool? _isLoading;
 
   List<DeliveryBills> deliveries = [];
+  late TabController? _tabController;
 
   @override
   void initState() {
     super.initState();
+    _tabController = TabController(length: 2, vsync: this);
+    //_tabController?.animateTo(2);
     _service.fetchDelivery().then((value) {
       if (value != null && value.data?.deliveryBills != null) {
         setState(() {
@@ -107,28 +110,307 @@ class _HomeViewState extends State<HomeView> {
                   ),
                 ],
               ),
-              child: DefaultTabController(
-                length: 2,
-                child: TabBar(
-                  labelColor: Color(0xFFFFFFFF),
-                  unselectedLabelColor: Colors.grey,
-                  indicatorColor: Color(0xFFFFFFFF),
-                  indicator: BoxDecoration(
-                      borderRadius: BorderRadius.circular(50),
-                      color: Color(0xFF004F62)),
-                  tabs: [
-                    Tab(
-                      text: "New",
-                    ),
-                    Tab(
-                      text: "Others",
-                    ),
-                  ],
-                ),
+              child: TabBar(
+                controller: _tabController,
+                labelColor: Color(0xFFFFFFFF),
+                unselectedLabelColor: Colors.grey,
+                indicatorColor: Color(0xFFFFFFFF),
+                indicator: BoxDecoration(
+                    borderRadius: BorderRadius.circular(50),
+                    color: Color(0xFF004F62)),
+                tabs: [
+                  Tab(
+                    text: "New",
+                  ),
+                  Tab(
+                    text: "Others",
+                  ),
+                ],
               ),
             ),
           ),
+          Expanded(
+            child: Container(
+              //height: 300,
+              width: double.infinity,
+
+              child: TabBarView(
+                controller: _tabController,
+                children: [
+                  //New
+                  Container(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          "No orders yet",
+                          style: GoogleFonts.montserrat(
+                            textStyle: TextStyle(
+                              //color: Color(0xFF004F62),
+                              fontSize: 25,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(10.0),
+                          child: Text(
+                            "You don't have any orders in your history.",
+                            style: GoogleFonts.montserrat(
+                              textStyle: TextStyle(
+                                //color: Color(0xFF004F62),
+                                fontSize: 18,
+                                fontWeight: FontWeight.normal,
+                              ),
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  _isLoading == null
+                      ? const Center(
+                          child: CircularProgressIndicator(),
+                        )
+                      : _isLoading == true
+                          ? ListView.builder(
+                              itemCount: deliveries.length,
+                              itemBuilder: (context, index) {
+                                return deliveryCard(
+                                  index,
+                                  deliveries[index]!.bILLDATE!,
+                                  deliveries[index]!.bILLNO!,
+                                  deliveries[index]!.dLVRYSTATUSFLG!,
+                                );
+                              },
+                            )
+                          : const Center(
+                              child: Text("Bir sorun oluştu.."),
+                            ),
+                ],
+              ),
+            ),
+          )
         ]),
+      ),
+    );
+  }
+
+  Widget deliveryCard(index, date, billNo, statusFlag) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 12, right: 16.5, left: 16.5),
+      child: Container(
+        decoration: BoxDecoration(
+          color: Color(0xFFFFFFFF),
+          borderRadius: BorderRadius.circular(8),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.withOpacity(0.5),
+              spreadRadius: 1,
+              blurRadius: 6,
+              offset: Offset(3, 3), // changes position of shadow
+            ),
+          ],
+        ),
+        height: 91,
+        width: 342,
+        //color: Colors.green,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                //status column
+                Padding(
+                  padding: const EdgeInsets.only(top: 4, left: 19),
+                  child: Container(
+                    width: 85,
+                    height: 60,
+                    //color: Colors.green,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        //delivery no like #3
+                        Text(
+                          "#" + billNo,
+                          style: GoogleFonts.montserrat(
+                            textStyle: TextStyle(
+                              color: Color(0xFF808080),
+                              fontSize: 12,
+                              fontWeight: FontWeight.normal,
+                            ),
+                          ),
+                        ),
+                        //status
+                        Padding(
+                          padding: const EdgeInsets.only(top: 8, left: 24),
+                          child: Text(
+                            "Status",
+                            style: GoogleFonts.montserrat(
+                              textStyle: TextStyle(
+                                color: Color(0xFF808080),
+                                fontSize: 10,
+                                fontWeight: FontWeight.normal,
+                              ),
+                            ),
+                          ),
+                        ),
+                        //Status Type
+
+                        Padding(
+                          padding: const EdgeInsets.only(top: 5),
+                          child: Text(
+                            "Delivered",
+                            style: GoogleFonts.montserrat(
+                              textStyle: TextStyle(
+                                color: Color(0xFF004F62),
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                //Divider
+                Padding(
+                  padding: const EdgeInsets.only(top: 27.5, bottom: 16.5),
+                  child: VerticalDivider(
+                    thickness: 1,
+                    color: Color(0xFFC7C7C7),
+                  ),
+                ),
+                //TotalPrice Container
+                Padding(
+                  padding: const EdgeInsets.only(left: 6, top: 27),
+                  child: Container(
+                    width: 64,
+                    height: 37,
+                    //color: Colors.green,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        //Total Price
+                        Center(
+                          child: Text(
+                            "Total price",
+                            style: GoogleFonts.montserrat(
+                              textStyle: TextStyle(
+                                color: Color(0xFF808080),
+                                fontSize: 10,
+                                fontWeight: FontWeight.normal,
+                              ),
+                            ),
+                          ),
+                        ),
+                        //Price LE
+                        Padding(
+                          padding: const EdgeInsets.only(top: 5),
+                          child: SingleChildScrollView(
+                            scrollDirection: Axis.horizontal,
+                            child: Center(
+                              child: Text(
+                                "6378 LE",
+                                style: GoogleFonts.montserrat(
+                                  textStyle: TextStyle(
+                                    color: Color(0xFF004F62),
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                //Divider
+                Padding(
+                  padding:
+                      const EdgeInsets.only(top: 27.5, bottom: 16.5, left: 6),
+                  child: VerticalDivider(
+                    thickness: 1,
+                    color: Color(0xFFC7C7C7),
+                  ),
+                ),
+                //Date Container
+                Padding(
+                  padding: const EdgeInsets.only(left: 6, top: 27),
+                  child: Container(
+                    width: 95,
+                    height: 36,
+                    //color: Colors.green,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        //Date
+                        Center(
+                          child: Text(
+                            "Date",
+                            style: GoogleFonts.montserrat(
+                              textStyle: TextStyle(
+                                color: Color(0xFF808080),
+                                fontSize: 10,
+                                fontWeight: FontWeight.normal,
+                              ),
+                            ),
+                          ),
+                        ),
+                        //Date Value
+                        Padding(
+                          padding: const EdgeInsets.only(top: 4),
+                          child: Text(
+                            date,
+                            style: GoogleFonts.montserrat(
+                              textStyle: TextStyle(
+                                color: Color(0xFF004F62),
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            Container(
+              width: 60,
+              height: double.infinity,
+              decoration: BoxDecoration(
+                color: Colors.red,
+                borderRadius: BorderRadius.only(
+                    topRight: Radius.circular(8),
+                    bottomRight: Radius.circular(8)),
+              ),
+              child: Center(
+                child: Text(
+                  "Order Details \n >",
+                  style: GoogleFonts.montserrat(
+                    textStyle: TextStyle(
+                      color: Color(0xFFFFFFFFFF),
+                      fontSize: 12,
+                      fontWeight: FontWeight.normal,
+                    ),
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
