@@ -12,7 +12,10 @@ The application consists of 3 pages.
 ![login](https://user-images.githubusercontent.com/127307051/224324684-9f29d1cc-99d1-4b90-84f4-aaf9e0472525.png)
 
 -Home Page
-![home](https://user-images.githubusercontent.com/127307051/224324700-e0f18892-20b3-4318-8796-a2b76a903868.png)
+![home2](https://user-images.githubusercontent.com/127307051/224581209-7c6ba377-e582-4a91-9af6-c59ec50add7d.png)
+![home3](https://user-images.githubusercontent.com/127307051/224581213-11bb0cbe-2405-4a4d-92e5-58928e4000ce.png)
+
+
 
 
 
