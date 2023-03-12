@@ -178,9 +178,9 @@ class _HomeViewState extends State<HomeView> with TickerProviderStateMixin {
                               itemBuilder: (context, index) {
                                 return deliveryCard(
                                   index,
-                                  deliveries[index]!.bILLDATE!,
-                                  deliveries[index]!.bILLNO!,
-                                  deliveries[index]!.dLVRYSTATUSFLG!,
+                                  deliveries[index].bILLDATE!,
+                                  deliveries[index].bILLNO!,
+                                  deliveries[index].dLVRYSTATUSFLG!,
                                 );
                               },
                             )
