@@ -92,9 +92,7 @@ class _HomeViewState extends State<HomeView> with TickerProviderStateMixin {
                     BorderRadius.only(bottomLeft: Radius.circular(18))),
           ),
           Padding(
-            padding: const EdgeInsets.only(
-              top: 16,
-            ),
+            padding: const EdgeInsets.only(top: 16, bottom: 61),
             child: Container(
               width: 220,
               height: 36,
@@ -155,7 +153,7 @@ class _HomeViewState extends State<HomeView> with TickerProviderStateMixin {
                         Padding(
                           padding: const EdgeInsets.all(10.0),
                           child: Text(
-                            "You don't have any orders in your history.",
+                            "You don't have any delivery in your history.",
                             style: GoogleFonts.montserrat(
                               textStyle: TextStyle(
                                 //color: Color(0xFF004F62),
@@ -169,6 +167,7 @@ class _HomeViewState extends State<HomeView> with TickerProviderStateMixin {
                       ],
                     ),
                   ),
+                  //others
                   _isLoading == null
                       ? const Center(
                           child: CircularProgressIndicator(),
@@ -186,7 +185,7 @@ class _HomeViewState extends State<HomeView> with TickerProviderStateMixin {
                               },
                             )
                           : const Center(
-                              child: Text("Bir sorun oluştu.."),
+                              child: Text("We have a problem.."),
                             ),
                 ],
               ),
@@ -261,15 +260,30 @@ class _HomeViewState extends State<HomeView> with TickerProviderStateMixin {
                         ),
                         //Status Type
 
-                        Padding(
-                          padding: const EdgeInsets.only(top: 5),
-                          child: Text(
-                            "Delivered",
-                            style: GoogleFonts.montserrat(
-                              textStyle: TextStyle(
-                                color: Color(0xFF004F62),
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
+                        SingleChildScrollView(
+                          scrollDirection: Axis.horizontal,
+                          child: Padding(
+                            padding: const EdgeInsets.only(top: 5),
+                            child: Text(
+                              statusFlag == "1"
+                                  ? "Delivered"
+                                  : statusFlag == "2"
+                                      ? "Partial Return"
+                                      : statusFlag == "3"
+                                          ? "Full Return"
+                                          : "",
+                              style: GoogleFonts.montserrat(
+                                textStyle: TextStyle(
+                                  color: statusFlag == "1"
+                                      ? Color(0xFF707070)
+                                      : statusFlag == "2"
+                                          ? Color(0xFF004F62)
+                                          : statusFlag == 3
+                                              ? Color(0xFFD42A0F)
+                                              : Color(0xFFD42A0F),
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                ),
                               ),
                             ),
                           ),
@@ -390,7 +404,13 @@ class _HomeViewState extends State<HomeView> with TickerProviderStateMixin {
               width: 60,
               height: double.infinity,
               decoration: BoxDecoration(
-                color: Colors.red,
+                color: statusFlag == "1"
+                    ? Color(0xFF707070)
+                    : statusFlag == "2"
+                        ? Color(0xFF004F62)
+                        : statusFlag == 3
+                            ? Color(0xFFD42A0F)
+                            : Color(0xFFD42A0F),
                 borderRadius: BorderRadius.only(
                     topRight: Radius.circular(8),
                     bottomRight: Radius.circular(8)),
