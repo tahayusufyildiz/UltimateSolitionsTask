@@ -1,17 +1,24 @@
 # ultimate_solitions_task
 
-A new Flutter project.
+A Flutter Task for Ultimate Solitions.
 
-## Getting Started
+This app is an ERP system for restaurants.
 
-This project is a starting point for a Flutter application.
+The application consists of 3 pages.
+-Splash Screen
+![splash](https://user-images.githubusercontent.com/127307051/224324626-ea7692de-7693-42d4-b96f-dec358a4a6b5.png)
 
-A few resources to get you started if this is your first Flutter project:
+-Login Page
+![login](https://user-images.githubusercontent.com/127307051/224324684-9f29d1cc-99d1-4b90-84f4-aaf9e0472525.png)
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+-Home Page
+![home](https://user-images.githubusercontent.com/127307051/224324700-e0f18892-20b3-4318-8796-a2b76a903868.png)
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
-# UltimateSolitionsTask
+
+
+
+[Original App on AppStore](https://apps.apple.com/cy/app/onyx-orders-delivery/id1524308854?l=tr)
+
+
+
+
