@@ -15,6 +15,10 @@ The application consists of 3 pages.
 ![home2](https://user-images.githubusercontent.com/127307051/224581209-7c6ba377-e582-4a91-9af6-c59ec50add7d.png)
 ![home3](https://user-images.githubusercontent.com/127307051/224581213-11bb0cbe-2405-4a4d-92e5-58928e4000ce.png)
 
+*The app has session expires (If user leave the app for 3 minutes , the app return the login page)
+*Credentials for test:
+userId=1010 password:1
+
 
 
 
