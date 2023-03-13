@@ -1,33 +1,70 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:ultimate_solitions_task/view/login_view.dart';
 import 'package:ultimate_solitions_task/view/splashScreen.dart';
 
-void main() {
-  runApp(const MyApp());
+Timer? _rootTimer;
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  @override
+  Widget build(BuildContext context) => AppRoot();
+}
 
-  // This widget is the root of your application.
+class AppRoot extends StatefulWidget {
+  @override
+  AppRootState createState() => AppRootState();
+}
+
+class AppRootState extends State<AppRoot> {
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    initializeTimer();
+  }
+
+  void initializeTimer() {
+    if (_rootTimer != null) _rootTimer?.cancel();
+    const time = const Duration(minutes: 1);
+    _rootTimer = Timer(time, () {
+      logOutUser();
+    });
+  }
+
+  void logOutUser() async {
+    _rootTimer?.cancel();
+  }
+
+  void _handleUserInteraction([_]) {
+    if (_rootTimer != null && !_rootTimer!.isActive) {
+      return;
+    }
+    _rootTimer?.cancel();
+
+    initializeTimer();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // Try running your application with "flutter run". You'll see the
-        // application has a blue toolbar. Then, without quitting the app, try
-        // changing the primarySwatch below to Colors.green and then invoke
-        // "hot reload" (press "r" in the console where you ran "flutter run",
-        // or simply save your changes to "hot reload" in a Flutter IDE).
-        // Notice that the counter didn't reset back to zero; the application
-        // is not restarted.
-        primarySwatch: Colors.blue,
-      ),
-      home: const SplashScreen(),
+    return Listener(
+      behavior: HitTestBehavior.translucent,
+      onPointerDown: _handleUserInteraction,
+      onPointerMove: _handleUserInteraction,
+      onPointerUp: _handleUserInteraction,
+      child: MaterialApp(
+          title: 'example',
+          debugShowCheckedModeBanner: false,
+          theme: ThemeData(
+            primarySwatch: Colors.blue,
+            visualDensity: VisualDensity.adaptivePlatformDensity,
+          ),
+          home: const SplashScreen()),
     );
   }
 }
