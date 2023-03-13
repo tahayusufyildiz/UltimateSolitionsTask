@@ -18,6 +18,7 @@ class _HomeViewState extends State<HomeView> with TickerProviderStateMixin {
 
   List<DeliveryBills> deliveries = [];
   late TabController? _tabController;
+  late DeliveryBills? _delivery;
 
   @override
   void initState() {
