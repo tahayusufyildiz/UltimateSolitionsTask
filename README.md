@@ -8,6 +8,8 @@
 
 *The app has session expires (If user leave the app for 3 minutes , the app return the login page)
 
+*Created a local database for deleting , adding , editing and updating. [This package has been used.](https://pub.dev/packages/sqflite/install)
+
 *Credentials for test:userId=1010 password:1
 
 [Original App on AppStore](https://apps.apple.com/cy/app/onyx-orders-delivery/id1524308854?l=tr)
